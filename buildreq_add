@@ -1,0 +1,10 @@
+# This file contains additional build requirements that did not get
+# picked up automatically. One name per line, no whitespace.
+mesa-dev
+Vulkan-Headers-dev
+Vulkan-Loader-dev
+Vulkan-Tools
+qt6base-dev
+llvm-staticdev
+libxkbcommon-dev
+libxkbfile-dev
