@@ -6,7 +6,7 @@
 %define keepstatic 1
 Name     : qt6tools
 Version  : 6.5.0
-Release  : 44
+Release  : 45
 URL      : https://download.qt.io/official_releases/qt/6.5/6.5.0/submodules/qttools-everywhere-src-6.5.0.tar.xz
 Source0  : https://download.qt.io/official_releases/qt/6.5/6.5.0/submodules/qttools-everywhere-src-6.5.0.tar.xz
 Summary  : No detailed summary available
@@ -91,7 +91,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1683737503
+export SOURCE_DATE_EPOCH=1687472903
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -124,7 +124,7 @@ make  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1683737503
+export SOURCE_DATE_EPOCH=1687472903
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qt6tools
 cp %{_builddir}/qttools-everywhere-src-%{version}/LICENSES/BSD-3-Clause.txt %{buildroot}/usr/share/package-licenses/qt6tools/b073f11f0c81a95ab5e32aa6b5d23a5955a95274 || :
@@ -222,10 +222,6 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 
 %files dev
 %defattr(-,root,root,-)
-/V3/usr/lib64/libQt6Designer.so
-/V3/usr/lib64/libQt6DesignerComponents.so
-/V3/usr/lib64/libQt6Help.so
-/V3/usr/lib64/libQt6UiTools.so
 /usr/include/QtDesigner/6.5.0/QtDesigner/private/abstractdialoggui_p.h
 /usr/include/QtDesigner/6.5.0/QtDesigner/private/abstractintrospection_p.h
 /usr/include/QtDesigner/6.5.0/QtDesigner/private/actioneditor_p.h
@@ -673,13 +669,9 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 
 %files lib
 %defattr(-,root,root,-)
-/V3/usr/lib64/libQt6Designer.so.6
 /V3/usr/lib64/libQt6Designer.so.6.5.0
-/V3/usr/lib64/libQt6DesignerComponents.so.6
 /V3/usr/lib64/libQt6DesignerComponents.so.6.5.0
-/V3/usr/lib64/libQt6Help.so.6
 /V3/usr/lib64/libQt6Help.so.6.5.0
-/V3/usr/lib64/libQt6UiTools.so.6
 /V3/usr/lib64/libQt6UiTools.so.6.5.0
 /usr/lib64/libQt6Designer.so.6
 /usr/lib64/libQt6Designer.so.6.5.0
