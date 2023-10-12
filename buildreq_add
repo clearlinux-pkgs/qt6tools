@@ -8,3 +8,4 @@ qt6base-dev
 llvm-staticdev
 libxkbcommon-dev
 libxkbfile-dev
+zstd-dev

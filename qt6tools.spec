@@ -5,10 +5,10 @@
 #
 %define keepstatic 1
 Name     : qt6tools
-Version  : 6.5.3
-Release  : 46
-URL      : https://download.qt.io/official_releases/qt/6.5/6.5.3/submodules/qttools-everywhere-src-6.5.3.tar.xz
-Source0  : https://download.qt.io/official_releases/qt/6.5/6.5.3/submodules/qttools-everywhere-src-6.5.3.tar.xz
+Version  : 6.6.0
+Release  : 47
+URL      : https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qttools-everywhere-src-6.6.0.tar.xz
+Source0  : https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qttools-everywhere-src-6.6.0.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 BSD-3-Clause BSL-1.0 GFDL-1.3 GPL-2.0 GPL-3.0 LGPL-3.0 MIT
@@ -27,6 +27,7 @@ BuildRequires : llvm-dev
 BuildRequires : llvm-staticdev
 BuildRequires : mesa-dev
 BuildRequires : qt6base-dev
+BuildRequires : zstd-dev
 # Suppress stripping binaries
 %define __strip /bin/true
 %define debug_package %{nil}
@@ -83,15 +84,15 @@ license components for the qt6tools package.
 
 
 %prep
-%setup -q -n qttools-everywhere-src-6.5.3
-cd %{_builddir}/qttools-everywhere-src-6.5.3
+%setup -q -n qttools-everywhere-src-6.6.0
+cd %{_builddir}/qttools-everywhere-src-6.6.0
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1696274334
+export SOURCE_DATE_EPOCH=1697141488
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -150,7 +151,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1696274334
+export SOURCE_DATE_EPOCH=1697141488
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qt6tools
 cp %{_builddir}/qttools-everywhere-src-%{version}/LICENSES/BSD-3-Clause.txt %{buildroot}/usr/share/package-licenses/qt6tools/b073f11f0c81a95ab5e32aa6b5d23a5955a95274 || :
@@ -164,7 +165,7 @@ cp %{_builddir}/qttools-everywhere-src-%{version}/src/assistant/qlitehtml/LICENS
 cp %{_builddir}/qttools-everywhere-src-%{version}/src/assistant/qlitehtml/LICENSES/MIT.txt %{buildroot}/usr/share/package-licenses/qt6tools/adadb67a9875aeeac285309f1eab6e47d9ee08a7 || :
 cp %{_builddir}/qttools-everywhere-src-%{version}/src/assistant/qlitehtml/src/3rdparty/litehtml/LICENSE %{buildroot}/usr/share/package-licenses/qt6tools/e28ab474db38a338e29ca698348e02915867084c || :
 cp %{_builddir}/qttools-everywhere-src-%{version}/src/assistant/qlitehtml/src/3rdparty/litehtml/src/gumbo/LICENSE %{buildroot}/usr/share/package-licenses/qt6tools/2b8b815229aa8a61e483fb4ba0588b8b6c491890 || :
-cp %{_builddir}/qttools-everywhere-src-%{version}/tests/auto/qdoc/catch/CATCH_LICENSE.txt %{buildroot}/usr/share/package-licenses/qt6tools/3cba29011be2b9d59f6204d6fa0a386b1b2dbd90 || :
+cp %{_builddir}/qttools-everywhere-src-%{version}/src/qdoc/catch/CATCH_LICENSE.txt %{buildroot}/usr/share/package-licenses/qt6tools/3cba29011be2b9d59f6204d6fa0a386b1b2dbd90 || :
 cp %{_builddir}/qttools-everywhere-src-%{version}/tests/manual/qtattributionsscanner/data/LICENSE %{buildroot}/usr/share/package-licenses/qt6tools/673921c2954e5b10a7388e0a2fc6be083a609bd3 || :
 pushd clr-build-avx2
 %make_install_v3  || :
@@ -190,7 +191,6 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /V3/usr/lib64/qt6/bin/pixeltool
 /V3/usr/lib64/qt6/bin/qdbus
 /V3/usr/lib64/qt6/bin/qdbusviewer
-/V3/usr/lib64/qt6/bin/qdoc
 /V3/usr/lib64/qt6/bin/qtdiag
 /V3/usr/lib64/qt6/bin/qtdiag6
 /V3/usr/lib64/qt6/bin/qtplugininfo
@@ -203,7 +203,6 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/lib64/qt6/bin/pixeltool
 /usr/lib64/qt6/bin/qdbus
 /usr/lib64/qt6/bin/qdbusviewer
-/usr/lib64/qt6/bin/qdoc
 /usr/lib64/qt6/bin/qtdiag
 /usr/lib64/qt6/bin/qtdiag6
 /usr/lib64/qt6/bin/qtplugininfo
@@ -218,6 +217,11 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/lib64/qt6/mkspecs/modules/qt_lib_help_private.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_linguist.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_linguist_private.pri
+/usr/lib64/qt6/mkspecs/modules/qt_lib_qdoccatch_private.pri
+/usr/lib64/qt6/mkspecs/modules/qt_lib_qdoccatchconversionsprivate.pri
+/usr/lib64/qt6/mkspecs/modules/qt_lib_qdoccatchconversionsprivate_private.pri
+/usr/lib64/qt6/mkspecs/modules/qt_lib_qdoccatchgeneratorsprivate.pri
+/usr/lib64/qt6/mkspecs/modules/qt_lib_qdoccatchgeneratorsprivate_private.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_tools_private.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_uiplugin.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_uitools.pri
@@ -226,6 +230,9 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/lib64/qt6/modules/DesignerComponentsPrivate.json
 /usr/lib64/qt6/modules/Help.json
 /usr/lib64/qt6/modules/Linguist.json
+/usr/lib64/qt6/modules/QDocCatchConversionsPrivate.json
+/usr/lib64/qt6/modules/QDocCatchGeneratorsPrivate.json
+/usr/lib64/qt6/modules/QDocCatchPrivate.json
 /usr/lib64/qt6/modules/Tools.json
 /usr/lib64/qt6/modules/UiPlugin.json
 /usr/lib64/qt6/modules/UiTools.json
@@ -248,91 +255,91 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/abstractdialoggui_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/abstractintrospection_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/actioneditor_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/actionprovider_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/actionrepository_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/codedialog_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/connectionedit_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/csshighlighter_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/deviceprofile_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/dialoggui_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/extensionfactory_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/formbuilderextra_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/formlayoutmenu_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/formwindowbase_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/grid_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/gridpanel_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/htmlhighlighter_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/iconloader_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/iconselector_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/invisible_widget_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/layout_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/layoutinfo_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/metadatabase_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/morphmenu_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/newactiondialog_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/newformwidget_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/orderdialog_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/plaintexteditor_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/plugindialog_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/pluginmanager_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/previewconfigurationwidget_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/previewmanager_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/promotionmodel_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/promotiontaskmenu_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/properties_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/propertylineedit_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_command2_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_command_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_dnditem_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_dockwidget_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_formbuilder_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_formeditorcommand_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_formwindowcommand_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_formwindowmanager_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_introspection_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_membersheet_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_menu_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_menubar_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_objectinspector_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_promotion_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_promotiondialog_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_propertyeditor_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_propertysheet_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_qsettings_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_stackedbox_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_tabwidget_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_taskmenu_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_toolbar_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_toolbox_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_utils_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_widget_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_widgetbox_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qdesigner_widgetitem_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qlayout_widget_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qsimpleresource_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qtresourceeditordialog_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qtresourcemodel_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/qtresourceview_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/rcc_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/resourcebuilder_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/richtexteditor_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/selectsignaldialog_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/shared_enums_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/shared_global_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/shared_settings_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/sheet_delegate_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/signalslotdialog_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/spacer_widget_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/stylesheeteditor_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/textbuilder_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/textpropertyeditor_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/ui4_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/widgetdatabase_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/widgetfactory_p.h
-/usr/include/QtDesigner/6.5.3/QtDesigner/private/zoomwidget_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/abstractdialoggui_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/abstractintrospection_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/actioneditor_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/actionprovider_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/actionrepository_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/codedialog_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/connectionedit_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/csshighlighter_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/deviceprofile_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/dialoggui_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/extensionfactory_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/formbuilderextra_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/formlayoutmenu_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/formwindowbase_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/grid_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/gridpanel_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/htmlhighlighter_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/iconloader_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/iconselector_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/invisible_widget_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/layout_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/layoutinfo_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/metadatabase_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/morphmenu_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/newactiondialog_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/newformwidget_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/orderdialog_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/plaintexteditor_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/plugindialog_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/pluginmanager_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/previewconfigurationwidget_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/previewmanager_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/promotionmodel_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/promotiontaskmenu_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/properties_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/propertylineedit_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_command2_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_command_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_dnditem_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_dockwidget_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_formbuilder_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_formeditorcommand_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_formwindowcommand_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_formwindowmanager_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_introspection_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_membersheet_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_menu_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_menubar_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_objectinspector_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_promotion_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_promotiondialog_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_propertyeditor_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_propertysheet_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_qsettings_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_stackedbox_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_tabwidget_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_taskmenu_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_toolbar_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_toolbox_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_utils_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_widget_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_widgetbox_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qdesigner_widgetitem_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qlayout_widget_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qsimpleresource_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qtresourceeditordialog_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qtresourcemodel_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/qtresourceview_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/rcc_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/resourcebuilder_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/richtexteditor_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/selectsignaldialog_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/shared_enums_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/shared_global_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/shared_settings_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/sheet_delegate_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/signalslotdialog_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/spacer_widget_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/stylesheeteditor_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/textbuilder_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/textpropertyeditor_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/ui4_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/widgetdatabase_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/widgetfactory_p.h
+/usr/include/QtDesigner/6.6.0/QtDesigner/private/zoomwidget_p.h
 /usr/include/QtDesigner/QAbstractExtensionFactory
 /usr/include/QtDesigner/QAbstractExtensionManager
 /usr/include/QtDesigner/QAbstractFormBuilder
@@ -413,20 +420,20 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/include/QtDesigner/sdk_global.h
 /usr/include/QtDesigner/taskmenu.h
 /usr/include/QtDesigner/uilib_global.h
-/usr/include/QtDesignerComponents/6.5.3/QtDesignerComponents/private/lib_pch.h
+/usr/include/QtDesignerComponents/6.6.0/QtDesignerComponents/private/lib_pch.h
 /usr/include/QtDesignerComponents/QtDesignerComponents
 /usr/include/QtDesignerComponents/QtDesignerComponentsDepends
 /usr/include/QtDesignerComponents/QtDesignerComponentsVersion
 /usr/include/QtDesignerComponents/qtdesignercomponentsversion.h
-/usr/include/QtHelp/6.5.3/QtHelp/private/qfilternamedialog_p.h
-/usr/include/QtHelp/6.5.3/QtHelp/private/qhelpcollectionhandler_p.h
-/usr/include/QtHelp/6.5.3/QtHelp/private/qhelpdbreader_p.h
-/usr/include/QtHelp/6.5.3/QtHelp/private/qhelpengine_p.h
-/usr/include/QtHelp/6.5.3/QtHelp/private/qhelpfiltersettings_p.h
-/usr/include/QtHelp/6.5.3/QtHelp/private/qhelpsearchindexreader_default_p.h
-/usr/include/QtHelp/6.5.3/QtHelp/private/qhelpsearchindexreader_p.h
-/usr/include/QtHelp/6.5.3/QtHelp/private/qhelpsearchindexwriter_default_p.h
-/usr/include/QtHelp/6.5.3/QtHelp/private/qoptionswidget_p.h
+/usr/include/QtHelp/6.6.0/QtHelp/private/qfilternamedialog_p.h
+/usr/include/QtHelp/6.6.0/QtHelp/private/qhelpcollectionhandler_p.h
+/usr/include/QtHelp/6.6.0/QtHelp/private/qhelpdbreader_p.h
+/usr/include/QtHelp/6.6.0/QtHelp/private/qhelpengine_p.h
+/usr/include/QtHelp/6.6.0/QtHelp/private/qhelpfiltersettings_p.h
+/usr/include/QtHelp/6.6.0/QtHelp/private/qhelpsearchindexreader_default_p.h
+/usr/include/QtHelp/6.6.0/QtHelp/private/qhelpsearchindexreader_p.h
+/usr/include/QtHelp/6.6.0/QtHelp/private/qhelpsearchindexwriter_default_p.h
+/usr/include/QtHelp/6.6.0/QtHelp/private/qoptionswidget_p.h
 /usr/include/QtHelp/QCompressedHelpInfo
 /usr/include/QtHelp/QHelpContentItem
 /usr/include/QtHelp/QHelpContentModel
@@ -462,7 +469,26 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/include/QtHelp/qhelpsearchquerywidget.h
 /usr/include/QtHelp/qhelpsearchresultwidget.h
 /usr/include/QtHelp/qthelpversion.h
-/usr/include/QtTools/6.5.3/QtTools/private/qttools-config_p.h
+/usr/include/QtQDocCatch/QtQDocCatchDepends
+/usr/include/QtQDocCatch/catch/catch.hpp
+/usr/include/QtQDocCatchConversionsPrivate/QtQDocCatchConversionsPrivateDepends
+/usr/include/QtQDocCatchConversionsPrivate/catch_conversions/qdoc_catch_conversions.h
+/usr/include/QtQDocCatchConversionsPrivate/catch_conversions/qt_catch_conversions.h
+/usr/include/QtQDocCatchConversionsPrivate/catch_conversions/std_catch_conversions.h
+/usr/include/QtQDocCatchGeneratorsPrivate/QtQDocCatchGeneratorsPrivateDepends
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/generators/combinators/cycle_generator.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/generators/combinators/oneof_generator.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/generators/k_partition_of_r_generator.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/generators/path_generator.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/generators/qchar_generator.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/generators/qstring_generator.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/namespaces.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/utilities/semantics/copy_value.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/utilities/semantics/generator_handler.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/utilities/semantics/move_into_vector.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/utilities/statistics/distribution.h
+/usr/include/QtQDocCatchGeneratorsPrivate/catch_generators/utilities/statistics/percentages.h
+/usr/include/QtTools/6.6.0/QtTools/private/qttools-config_p.h
 /usr/include/QtTools/QtTools
 /usr/include/QtTools/QtToolsDepends
 /usr/include/QtTools/QtToolsVersion
@@ -477,7 +503,7 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/include/QtUiPlugin/customwidget.h
 /usr/include/QtUiPlugin/qdesignerexportwidget.h
 /usr/include/QtUiPlugin/qtuipluginversion.h
-/usr/include/QtUiTools/6.5.3/QtUiTools/private/quiloader_p.h
+/usr/include/QtUiTools/6.6.0/QtUiTools/private/quiloader_p.h
 /usr/include/QtUiTools/QUiLoader
 /usr/include/QtUiTools/QtUiTools
 /usr/include/QtUiTools/QtUiToolsDepends
@@ -528,6 +554,24 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsTargets-relwithdebinfo.cmake
 /usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsTargets.cmake
 /usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsVersionlessTargets.cmake
+/usr/lib64/cmake/Qt6QDocCatchConversionsPrivate/Qt6QDocCatchConversionsPrivateAdditionalTargetInfo.cmake
+/usr/lib64/cmake/Qt6QDocCatchConversionsPrivate/Qt6QDocCatchConversionsPrivateConfig.cmake
+/usr/lib64/cmake/Qt6QDocCatchConversionsPrivate/Qt6QDocCatchConversionsPrivateConfigVersion.cmake
+/usr/lib64/cmake/Qt6QDocCatchConversionsPrivate/Qt6QDocCatchConversionsPrivateConfigVersionImpl.cmake
+/usr/lib64/cmake/Qt6QDocCatchConversionsPrivate/Qt6QDocCatchConversionsPrivateTargets.cmake
+/usr/lib64/cmake/Qt6QDocCatchConversionsPrivate/Qt6QDocCatchConversionsPrivateVersionlessTargets.cmake
+/usr/lib64/cmake/Qt6QDocCatchGeneratorsPrivate/Qt6QDocCatchGeneratorsPrivateAdditionalTargetInfo.cmake
+/usr/lib64/cmake/Qt6QDocCatchGeneratorsPrivate/Qt6QDocCatchGeneratorsPrivateConfig.cmake
+/usr/lib64/cmake/Qt6QDocCatchGeneratorsPrivate/Qt6QDocCatchGeneratorsPrivateConfigVersion.cmake
+/usr/lib64/cmake/Qt6QDocCatchGeneratorsPrivate/Qt6QDocCatchGeneratorsPrivateConfigVersionImpl.cmake
+/usr/lib64/cmake/Qt6QDocCatchGeneratorsPrivate/Qt6QDocCatchGeneratorsPrivateTargets.cmake
+/usr/lib64/cmake/Qt6QDocCatchGeneratorsPrivate/Qt6QDocCatchGeneratorsPrivateVersionlessTargets.cmake
+/usr/lib64/cmake/Qt6QDocCatchPrivate/Qt6QDocCatchPrivateAdditionalTargetInfo.cmake
+/usr/lib64/cmake/Qt6QDocCatchPrivate/Qt6QDocCatchPrivateConfig.cmake
+/usr/lib64/cmake/Qt6QDocCatchPrivate/Qt6QDocCatchPrivateConfigVersion.cmake
+/usr/lib64/cmake/Qt6QDocCatchPrivate/Qt6QDocCatchPrivateConfigVersionImpl.cmake
+/usr/lib64/cmake/Qt6QDocCatchPrivate/Qt6QDocCatchPrivateTargets.cmake
+/usr/lib64/cmake/Qt6QDocCatchPrivate/Qt6QDocCatchPrivateVersionlessTargets.cmake
 /usr/lib64/cmake/Qt6Tools/Qt6ToolsAdditionalTargetInfo.cmake
 /usr/lib64/cmake/Qt6Tools/Qt6ToolsConfig.cmake
 /usr/lib64/cmake/Qt6Tools/Qt6ToolsConfigVersion.cmake
@@ -569,23 +613,25 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/lib64/pkgconfig/Qt6Designer.pc
 /usr/lib64/pkgconfig/Qt6Help.pc
 /usr/lib64/pkgconfig/Qt6Linguist.pc
+/usr/lib64/pkgconfig/Qt6QDocCatchConversionsPrivate.pc
+/usr/lib64/pkgconfig/Qt6QDocCatchGeneratorsPrivate.pc
 /usr/lib64/pkgconfig/Qt6UiPlugin.pc
 /usr/lib64/pkgconfig/Qt6UiTools.pc
 
 %files lib
 %defattr(-,root,root,-)
-/V3/usr/lib64/libQt6Designer.so.6.5.3
-/V3/usr/lib64/libQt6DesignerComponents.so.6.5.3
-/V3/usr/lib64/libQt6Help.so.6.5.3
-/V3/usr/lib64/libQt6UiTools.so.6.5.3
+/V3/usr/lib64/libQt6Designer.so.6.6.0
+/V3/usr/lib64/libQt6DesignerComponents.so.6.6.0
+/V3/usr/lib64/libQt6Help.so.6.6.0
+/V3/usr/lib64/libQt6UiTools.so.6.6.0
 /usr/lib64/libQt6Designer.so.6
-/usr/lib64/libQt6Designer.so.6.5.3
+/usr/lib64/libQt6Designer.so.6.6.0
 /usr/lib64/libQt6DesignerComponents.so.6
-/usr/lib64/libQt6DesignerComponents.so.6.5.3
+/usr/lib64/libQt6DesignerComponents.so.6.6.0
 /usr/lib64/libQt6Help.so.6
-/usr/lib64/libQt6Help.so.6.5.3
+/usr/lib64/libQt6Help.so.6.6.0
 /usr/lib64/libQt6UiTools.so.6
-/usr/lib64/libQt6UiTools.so.6.5.3
+/usr/lib64/libQt6UiTools.so.6.6.0
 
 %files libexec
 %defattr(-,root,root,-)
