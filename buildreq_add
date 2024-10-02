@@ -9,3 +9,4 @@ llvm-staticdev
 libxkbcommon-dev
 libxkbfile-dev
 zstd-dev
+cups-dev

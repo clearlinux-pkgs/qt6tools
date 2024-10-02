@@ -8,12 +8,13 @@
 %define keepstatic 1
 Name     : qt6tools
 Version  : 6.7.3
-Release  : 64
+Release  : 65
 URL      : https://download.qt.io/official_releases/qt/6.7/6.7.3/submodules/qttools-everywhere-src-6.7.3.zip
 Source0  : https://download.qt.io/official_releases/qt/6.7/6.7.3/submodules/qttools-everywhere-src-6.7.3.zip
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 BSD-3-Clause BSL-1.0 GPL-2.0 GPL-3.0 LGPL-3.0 MIT
+Requires: qt6tools-data = %{version}-%{release}
 Requires: qt6tools-lib = %{version}-%{release}
 Requires: qt6tools-libexec = %{version}-%{release}
 Requires: qt6tools-license = %{version}-%{release}
@@ -21,6 +22,7 @@ BuildRequires : Vulkan-Headers-dev
 BuildRequires : Vulkan-Loader-dev
 BuildRequires : Vulkan-Tools
 BuildRequires : buildreq-cmake
+BuildRequires : cups-dev
 BuildRequires : glibc-dev
 BuildRequires : libxkbcommon-dev
 BuildRequires : libxkbfile-dev
@@ -34,16 +36,26 @@ BuildRequires : zstd-dev
 # Suppress stripping binaries
 %define __strip /bin/true
 %define debug_package %{nil}
+Patch1: clang.patch
 
 %description
 Qt Designer is a capable graphical user interface designer that lets you
 create and configure forms without writing code. GUIs created with
 Qt Designer can be compiled into an application or created at run-time.
 
+%package data
+Summary: data components for the qt6tools package.
+Group: Data
+
+%description data
+data components for the qt6tools package.
+
+
 %package dev
 Summary: dev components for the qt6tools package.
 Group: Development
 Requires: qt6tools-lib = %{version}-%{release}
+Requires: qt6tools-data = %{version}-%{release}
 Provides: qt6tools-devel = %{version}-%{release}
 Requires: qt6tools = %{version}-%{release}
 
@@ -54,6 +66,7 @@ dev components for the qt6tools package.
 %package lib
 Summary: lib components for the qt6tools package.
 Group: Libraries
+Requires: qt6tools-data = %{version}-%{release}
 Requires: qt6tools-libexec = %{version}-%{release}
 Requires: qt6tools-license = %{version}-%{release}
 
@@ -81,6 +94,7 @@ license components for the qt6tools package.
 %prep
 %setup -q -n qttools-everywhere-src-6.7.3
 cd %{_builddir}/qttools-everywhere-src-6.7.3
+%patch -P 1 -p1
 pushd ..
 cp -a qttools-everywhere-src-6.7.3 buildavx2
 popd
@@ -90,7 +104,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1727878238
+export SOURCE_DATE_EPOCH=1727883880
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -108,7 +122,7 @@ FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
 export GOAMD64=v2
-%cmake .. -DQT_FEATURE_linguist=OFF  -G Ninja
+%cmake ..   -G Ninja
 ninja  %{?_smp_mflags}
 popd
 pushd ../buildavx2/
@@ -133,7 +147,7 @@ CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
 CXXFLAGS="$CLEAR_INTERMEDIATE_CXXFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
 FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS -march=x86-64-v3 "
-%cmake .. -DQT_FEATURE_linguist=OFF  -G Ninja
+%cmake ..   -G Ninja
 ninja  %{?_smp_mflags}
 popd
 popd
@@ -153,7 +167,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1727878238
+export SOURCE_DATE_EPOCH=1727883880
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qt6tools
 cp %{_builddir}/qttools-everywhere-src-%{version}/LICENSES/BSD-3-Clause.txt %{buildroot}/usr/share/package-licenses/qt6tools/79453f55fa8ee32d7b95581473edcbfd043e088f || :
@@ -189,6 +203,22 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 
 %files
 %defattr(-,root,root,-)
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/qt6/phrasebooks/danish.qph
+/usr/share/qt6/phrasebooks/dutch.qph
+/usr/share/qt6/phrasebooks/finnish.qph
+/usr/share/qt6/phrasebooks/french.qph
+/usr/share/qt6/phrasebooks/german.qph
+/usr/share/qt6/phrasebooks/hungarian.qph
+/usr/share/qt6/phrasebooks/italian.qph
+/usr/share/qt6/phrasebooks/japanese.qph
+/usr/share/qt6/phrasebooks/norwegian.qph
+/usr/share/qt6/phrasebooks/polish.qph
+/usr/share/qt6/phrasebooks/russian.qph
+/usr/share/qt6/phrasebooks/spanish.qph
+/usr/share/qt6/phrasebooks/swedish.qph
 
 %files dev
 %defattr(-,root,root,-)
@@ -367,6 +397,50 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/include/QtDesignerComponents/QtDesignerComponentsDepends
 /usr/include/QtDesignerComponents/QtDesignerComponentsVersion
 /usr/include/QtDesignerComponents/qtdesignercomponentsversion.h
+/usr/include/QtHelp/6.7.3/QtHelp/private/qfilternamedialog_p.h
+/usr/include/QtHelp/6.7.3/QtHelp/private/qhelpcollectionhandler_p.h
+/usr/include/QtHelp/6.7.3/QtHelp/private/qhelpdbreader_p.h
+/usr/include/QtHelp/6.7.3/QtHelp/private/qhelpengine_p.h
+/usr/include/QtHelp/6.7.3/QtHelp/private/qhelpfiltersettings_p.h
+/usr/include/QtHelp/6.7.3/QtHelp/private/qhelpsearchindexreader_default_p.h
+/usr/include/QtHelp/6.7.3/QtHelp/private/qhelpsearchindexreader_p.h
+/usr/include/QtHelp/6.7.3/QtHelp/private/qhelpsearchindexwriter_default_p.h
+/usr/include/QtHelp/6.7.3/QtHelp/private/qoptionswidget_p.h
+/usr/include/QtHelp/QCompressedHelpInfo
+/usr/include/QtHelp/QHelpContentItem
+/usr/include/QtHelp/QHelpContentModel
+/usr/include/QtHelp/QHelpContentWidget
+/usr/include/QtHelp/QHelpEngine
+/usr/include/QtHelp/QHelpEngineCore
+/usr/include/QtHelp/QHelpFilterData
+/usr/include/QtHelp/QHelpFilterEngine
+/usr/include/QtHelp/QHelpFilterSettingsWidget
+/usr/include/QtHelp/QHelpGlobal
+/usr/include/QtHelp/QHelpIndexModel
+/usr/include/QtHelp/QHelpIndexWidget
+/usr/include/QtHelp/QHelpLink
+/usr/include/QtHelp/QHelpSearchEngine
+/usr/include/QtHelp/QHelpSearchQuery
+/usr/include/QtHelp/QHelpSearchQueryWidget
+/usr/include/QtHelp/QHelpSearchResult
+/usr/include/QtHelp/QHelpSearchResultWidget
+/usr/include/QtHelp/QtHelp
+/usr/include/QtHelp/QtHelpDepends
+/usr/include/QtHelp/QtHelpVersion
+/usr/include/QtHelp/qcompressedhelpinfo.h
+/usr/include/QtHelp/qhelp_global.h
+/usr/include/QtHelp/qhelpcontentwidget.h
+/usr/include/QtHelp/qhelpengine.h
+/usr/include/QtHelp/qhelpenginecore.h
+/usr/include/QtHelp/qhelpfilterdata.h
+/usr/include/QtHelp/qhelpfilterengine.h
+/usr/include/QtHelp/qhelpfiltersettingswidget.h
+/usr/include/QtHelp/qhelpindexwidget.h
+/usr/include/QtHelp/qhelplink.h
+/usr/include/QtHelp/qhelpsearchengine.h
+/usr/include/QtHelp/qhelpsearchquerywidget.h
+/usr/include/QtHelp/qhelpsearchresultwidget.h
+/usr/include/QtHelp/qthelpversion.h
 /usr/include/QtQDocCatch/QtQDocCatchDepends
 /usr/include/QtQDocCatch/catch/catch.hpp
 /usr/include/QtQDocCatchConversions/QtQDocCatchConversionsDepends
@@ -428,6 +502,31 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/lib64/cmake/Qt6DesignerComponentsPrivate/Qt6DesignerComponentsPrivateTargets-relwithdebinfo.cmake
 /usr/lib64/cmake/Qt6DesignerComponentsPrivate/Qt6DesignerComponentsPrivateTargets.cmake
 /usr/lib64/cmake/Qt6DesignerComponentsPrivate/Qt6DesignerComponentsPrivateVersionlessTargets.cmake
+/usr/lib64/cmake/Qt6Help/Qt6HelpAdditionalTargetInfo.cmake
+/usr/lib64/cmake/Qt6Help/Qt6HelpConfig.cmake
+/usr/lib64/cmake/Qt6Help/Qt6HelpConfigVersion.cmake
+/usr/lib64/cmake/Qt6Help/Qt6HelpConfigVersionImpl.cmake
+/usr/lib64/cmake/Qt6Help/Qt6HelpDependencies.cmake
+/usr/lib64/cmake/Qt6Help/Qt6HelpTargets-relwithdebinfo.cmake
+/usr/lib64/cmake/Qt6Help/Qt6HelpTargets.cmake
+/usr/lib64/cmake/Qt6Help/Qt6HelpVersionlessTargets.cmake
+/usr/lib64/cmake/Qt6Linguist/Qt6LinguistAdditionalTargetInfo.cmake
+/usr/lib64/cmake/Qt6Linguist/Qt6LinguistConfig.cmake
+/usr/lib64/cmake/Qt6Linguist/Qt6LinguistConfigVersion.cmake
+/usr/lib64/cmake/Qt6Linguist/Qt6LinguistConfigVersionImpl.cmake
+/usr/lib64/cmake/Qt6Linguist/Qt6LinguistDependencies.cmake
+/usr/lib64/cmake/Qt6Linguist/Qt6LinguistTargets.cmake
+/usr/lib64/cmake/Qt6Linguist/Qt6LinguistVersionlessTargets.cmake
+/usr/lib64/cmake/Qt6LinguistTools/GenerateLUpdateProject.cmake
+/usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsAdditionalTargetInfo.cmake
+/usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsConfig.cmake
+/usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsConfigVersion.cmake
+/usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsConfigVersionImpl.cmake
+/usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsDependencies.cmake
+/usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsMacros.cmake
+/usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsTargets-relwithdebinfo.cmake
+/usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsTargets.cmake
+/usr/lib64/cmake/Qt6LinguistTools/Qt6LinguistToolsVersionlessTargets.cmake
 /usr/lib64/cmake/Qt6QDocCatchConversionsPrivate/Qt6QDocCatchConversionsPrivateAdditionalTargetInfo.cmake
 /usr/lib64/cmake/Qt6QDocCatchConversionsPrivate/Qt6QDocCatchConversionsPrivateConfig.cmake
 /usr/lib64/cmake/Qt6QDocCatchConversionsPrivate/Qt6QDocCatchConversionsPrivateConfigVersion.cmake
@@ -480,14 +579,21 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/lib64/libQt6Designer.so
 /usr/lib64/libQt6DesignerComponents.prl
 /usr/lib64/libQt6DesignerComponents.so
+/usr/lib64/libQt6Help.prl
+/usr/lib64/libQt6Help.so
 /usr/lib64/libQt6UiTools.prl
 /usr/lib64/libQt6UiTools.so
 /usr/lib64/pkgconfig/Qt6Designer.pc
+/usr/lib64/pkgconfig/Qt6Help.pc
+/usr/lib64/pkgconfig/Qt6Linguist.pc
 /usr/lib64/pkgconfig/Qt6UiPlugin.pc
 /usr/lib64/pkgconfig/Qt6UiTools.pc
 /usr/lib64/qt6/mkspecs/modules/qt_lib_designer.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_designer_private.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_designercomponents_private.pri
+/usr/lib64/qt6/mkspecs/modules/qt_lib_help.pri
+/usr/lib64/qt6/mkspecs/modules/qt_lib_help_private.pri
+/usr/lib64/qt6/mkspecs/modules/qt_lib_linguist.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_qdoccatch_private.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_qdoccatchconversions_private.pri
 /usr/lib64/qt6/mkspecs/modules/qt_lib_qdoccatchgenerators_private.pri
@@ -500,8 +606,14 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 %defattr(-,root,root,-)
 /V3/usr/lib64/libQt6Designer.so.6.7.3
 /V3/usr/lib64/libQt6DesignerComponents.so.6.7.3
+/V3/usr/lib64/libQt6Help.so.6.7.3
 /V3/usr/lib64/libQt6UiTools.so.6.7.3
+/V3/usr/lib64/qt6/bin/assistant
 /V3/usr/lib64/qt6/bin/designer
+/V3/usr/lib64/qt6/bin/lconvert
+/V3/usr/lib64/qt6/bin/linguist
+/V3/usr/lib64/qt6/bin/lrelease
+/V3/usr/lib64/qt6/bin/lupdate
 /V3/usr/lib64/qt6/bin/pixeltool
 /V3/usr/lib64/qt6/bin/qdbus
 /V3/usr/lib64/qt6/bin/qdbusviewer
@@ -512,9 +624,16 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/lib64/libQt6Designer.so.6.7.3
 /usr/lib64/libQt6DesignerComponents.so.6
 /usr/lib64/libQt6DesignerComponents.so.6.7.3
+/usr/lib64/libQt6Help.so.6
+/usr/lib64/libQt6Help.so.6.7.3
 /usr/lib64/libQt6UiTools.so.6
 /usr/lib64/libQt6UiTools.so.6.7.3
+/usr/lib64/qt6/bin/assistant
 /usr/lib64/qt6/bin/designer
+/usr/lib64/qt6/bin/lconvert
+/usr/lib64/qt6/bin/linguist
+/usr/lib64/qt6/bin/lrelease
+/usr/lib64/qt6/bin/lupdate
 /usr/lib64/qt6/bin/pixeltool
 /usr/lib64/qt6/bin/qdbus
 /usr/lib64/qt6/bin/qdbusviewer
@@ -523,9 +642,12 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 /usr/lib64/qt6/bin/qtplugininfo
 /usr/lib64/qt6/metatypes/qt6designer_relwithdebinfo_metatypes.json
 /usr/lib64/qt6/metatypes/qt6designercomponentsprivate_relwithdebinfo_metatypes.json
+/usr/lib64/qt6/metatypes/qt6help_relwithdebinfo_metatypes.json
 /usr/lib64/qt6/metatypes/qt6uitools_relwithdebinfo_metatypes.json
 /usr/lib64/qt6/modules/Designer.json
 /usr/lib64/qt6/modules/DesignerComponentsPrivate.json
+/usr/lib64/qt6/modules/Help.json
+/usr/lib64/qt6/modules/Linguist.json
 /usr/lib64/qt6/modules/QDocCatchConversionsPrivate.json
 /usr/lib64/qt6/modules/QDocCatchGeneratorsPrivate.json
 /usr/lib64/qt6/modules/QDocCatchPrivate.json
@@ -535,7 +657,15 @@ rm -f %{buildroot}*/usr/lib64/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin
 
 %files libexec
 %defattr(-,root,root,-)
+/V3/usr/libexec/lprodump
+/V3/usr/libexec/lrelease-pro
+/V3/usr/libexec/lupdate-pro
+/V3/usr/libexec/qhelpgenerator
 /V3/usr/libexec/qtattributionsscanner
+/usr/libexec/lprodump
+/usr/libexec/lrelease-pro
+/usr/libexec/lupdate-pro
+/usr/libexec/qhelpgenerator
 /usr/libexec/qtattributionsscanner
 
 %files license

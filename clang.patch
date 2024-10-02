@@ -1,0 +1,15 @@
+--- qttools-everywhere-src-6.7.3/src/linguist/lupdate/clangtoolastreader.cpp~	2024-09-19 18:58:44.000000000 +0000
++++ qttools-everywhere-src-6.7.3/src/linguist/lupdate/clangtoolastreader.cpp	2024-10-02 15:30:16.162327054 +0000
+@@ -781,10 +781,10 @@
+     auto fullLocation = m_context->getFullLoc(namedDeclaration->getBeginLoc());
+     if (!fullLocation.isValid() || !fullLocation.getFileEntry())
+         return true;
+-
++#if 0
+     if (!LupdatePrivate::isFileSignificant(fullLocation.getFileEntry()->getName().str()))
+         return true;
+-
++#endif
+     qCDebug(lcClang) << "NamedDecl Name:   " << QString::fromStdString(namedDeclaration->getQualifiedNameAsString());
+     qCDebug(lcClang) << "NamedDecl source: " << QString::fromStdString(namedDeclaration->getSourceRange().printToString(
+         m_context->getSourceManager()));
