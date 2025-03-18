@@ -8,7 +8,7 @@
 %define keepstatic 1
 Name     : qt6tools
 Version  : 6.8.2
-Release  : 71
+Release  : 72
 URL      : https://download.qt.io/official_releases/qt/6.8/6.8.2/submodules/qttools-everywhere-src-6.8.2.zip
 Source0  : https://download.qt.io/official_releases/qt/6.8/6.8.2/submodules/qttools-everywhere-src-6.8.2.zip
 Summary  : No detailed summary available
